@@ -1,85 +1,97 @@
 package main
 
 import (
+	"fmt"
 	_ "github.com/MiracleWong/go-blog-service/docs"
+	"github.com/MiracleWong/go-blog-service/global"
+	"github.com/MiracleWong/go-blog-service/internal/model"
 	"github.com/MiracleWong/go-blog-service/internal/routers"
+	"github.com/MiracleWong/go-blog-service/pkg/setting"
+	"log"
 	"net/http"
 	"time"
 )
 
+func init() {
+	//err := setupSetting()
+	//if err != nil {
+	//	log.Fatal("init.setupSetting err: %v ", err)
+	//}
+	err := setupDBEngine()
+	if err != nil {
+		log.Fatalf("init.setupDBEngine err: %v ", err)
+	}
+}
 
-
-// @title Swagger Example API
-// @version 1.0
-// @description This is a sample server celler server.
-// @termsOfService http://swagger.io/terms/
-
-// @contact.name API Support
-// @contact.url http://www.swagger.io/support
-// @contact.email support@swagger.io
-
-// @license.name Apache 2.0
-// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
-
-// @host localhost:8080
-// @BasePath /api/v1
-// @query.collection.format multi
-
-// @securityDefinitions.basic BasicAuth
-
-// @securityDefinitions.apikey ApiKeyAuth
-// @in header
-// @name Authorization
-
-// @securitydefinitions.oauth2.application OAuth2Application
-// @tokenUrl https://example.com/oauth/token
-// @scope.write Grants write access
-// @scope.admin Grants read and write access to administrative information
-
-// @securitydefinitions.oauth2.implicit OAuth2Implicit
-// @authorizationurl https://example.com/oauth/authorize
-// @scope.write Grants write access
-// @scope.admin Grants read and write access to administrative information
-
-// @securitydefinitions.oauth2.password OAuth2Password
-// @tokenUrl https://example.com/oauth/token
-// @scope.read Grants read access
-// @scope.write Grants write access
-// @scope.admin Grants read and write access to administrative information
-
-// @securitydefinitions.oauth2.accessCode OAuth2AccessCode
-// @tokenUrl https://example.com/oauth/token
-// @authorizationurl https://example.com/oauth/authorize
-// @scope.admin Grants read and write access to administrative information
-
-// @x-extension-openapi {"example": "value on a json format"}
+//func init() {
+//	viper.SetConfigName("config1") // 读取json配置文件
+//	viper.AddConfigPath(".")      // 设置配置文件和可执行二进制文件在用一个目录
+//	viper.SetConfigType("json")
+//	if err := viper.ReadInConfig(); err != nil {
+//		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
+//			// Config file not found; ignore error if desired
+//			log.Println("no such config file")
+//		} else {
+//			// Config file was found but another error was produced
+//			log.Println("read config error")
+//		}
+//		log.Fatal(err) // 读取配置文件失败致命错误
+//	}
+//}
 
 func main() {
+	//gin.SetMode(global.ServerSetting.RunMode)
 	router := routers.NewRouter()
 	s := &http.Server{
 		Addr: ":8080",
 		Handler: router,
-		ReadTimeout: 10 * time.Second,
+		ReadTimeout: 10* time.Second,
 		WriteTimeout:  10* time.Second,
 		MaxHeaderBytes: 1 << 20,
+		//Addr: ":8080",
+		//Handler: router,
+		//ReadTimeout: global.ServerSetting.ReadTimeout * time.Second,
+		//WriteTimeout:  global.ServerSetting.WriteTimeout * time.Second,
+		//MaxHeaderBytes: 1 << 20,
 	}
-	//r := gin.Default()
-	//
-	//c := controller.NewController()
-	//
-	//v1 := r.Group("/api/v1")
-	//{
-	//	accounts := v1.Group("/accounts")
-	//	{
-	//		accounts.GET(":id", c.ShowAccount)
-	//		accounts.GET("", c.ListAccounts)
-	//		accounts.POST("", c.AddAccount)
-	//		accounts.DELETE(":id", c.DeleteAccount)
-	//		accounts.PATCH(":id", c.UpdateAccount)
-	//		accounts.POST(":id/images", c.UploadAccountImage)
-	//	}
-	//	//...
-	//}
-	//r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	s.ListenAndServe()
+	//fmt.Println("获取配置文件的port", viper.GetInt("port"))
+	//fmt.Println("获取配置文件的mysql.url", viper.GetString(`mysql.url`))
+	//fmt.Println("获取配置文件的mysql.username", viper.GetString(`mysql.username`))
+	//fmt.Println("获取配置文件的mysql.password", viper.GetString(`mysql.password`))
+	//fmt.Println("获取配置文件的redis", viper.GetStringSlice("redis"))
+	//fmt.Println("获取配置文件的smtp", viper.GetStringMap("smtp"))
+}
+
+func setupSetting() error {
+	s, err := setting.NewSetting()
+	if  err != nil {
+		return err
+	}
+	err = s.ReadSection("Sever", &global.ServerSetting)
+	fmt.Println(&global.ServerSetting)
+	if  err != nil {
+		return err
+	}
+	err = s.ReadSection("Sever", &global.AppSetting)
+	if  err != nil {
+		return err
+	}
+	err = s.ReadSection("Sever", &global.DataSetting)
+	if  err != nil {
+		return err
+	}
+	//global.ServerSetting.ReadTimeout *= time.Second
+	//global.ServerSetting.WriteTimeout *= time.Second
+	return err
+}
+
+func setupDBEngine() error {
+	var err error
+	global.DBEngine, err = model.NewDBEngine()
+	//global.DBEngine, err = model.NewDBEngine(global.DataSetting)
+	if err != nil {
+		return err
+	}
+	return nil
 }

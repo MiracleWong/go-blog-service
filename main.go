@@ -1,12 +1,15 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	_ "github.com/MiracleWong/go-blog-service/docs"
 	"github.com/MiracleWong/go-blog-service/global"
 	"github.com/MiracleWong/go-blog-service/internal/model"
 	"github.com/MiracleWong/go-blog-service/internal/routers"
+	"github.com/MiracleWong/go-blog-service/pkg/logger"
 	"github.com/MiracleWong/go-blog-service/pkg/setting"
+	"gopkg.in/natefinch/lumberjack.v2"
 	"log"
 	"net/http"
 	"time"
@@ -21,8 +24,16 @@ func init() {
 	if err != nil {
 		log.Fatalf("init.setupDBEngine err: %v ", err)
 	}
+	err = setupLogger()
+	if err != nil {
+		log.Fatalf("init.setupLogger err: %v ", err)
+	}
 }
 
+
+var (
+	ctx context.Context
+)
 //func init() {
 //	viper.SetConfigName("config1") // 读取json配置文件
 //	viper.AddConfigPath(".")      // 设置配置文件和可执行二进制文件在用一个目录
@@ -54,6 +65,7 @@ func main() {
 		//WriteTimeout:  global.ServerSetting.WriteTimeout * time.Second,
 		//MaxHeaderBytes: 1 << 20,
 	}
+	global.Logger.Info(ctx,"%s: go-programming-tour-book/%s", "MiracleWong","go-blog-service")
 	s.ListenAndServe()
 	//fmt.Println("获取配置文件的port", viper.GetInt("port"))
 	//fmt.Println("获取配置文件的mysql.url", viper.GetString(`mysql.url`))
@@ -93,5 +105,16 @@ func setupDBEngine() error {
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+func setupLogger() error {
+	global.Logger = logger.NewLogger(&lumberjack.Logger{
+		Filename:  "storage/logs/app.log",
+		MaxSize:   500,
+		MaxAge:    10,
+		LocalTime: true,
+	}, "", log.LstdFlags).WithCaller(2)
+
 	return nil
 }

@@ -1,6 +1,8 @@
 package v1
 
 import (
+	"github.com/MiracleWong/go-blog-service/pkg/app"
+	"github.com/MiracleWong/go-blog-service/pkg/errcode"
 	"github.com/gin-gonic/gin"
 	"log"
 )
@@ -12,7 +14,7 @@ func NewArticle() Article {
 }
 
 func (t Article) Get(c *gin.Context) {
-
+	app.NewResponse(c).ToErrorResponse(errcode.ServerError)
 }
 
 func (t Article) List(c *gin.Context) {

@@ -6,13 +6,13 @@ import (
 	"github.com/MiracleWong/go-blog-service/global"
 	"github.com/MiracleWong/go-blog-service/internal/model"
 	"github.com/MiracleWong/go-blog-service/internal/routers"
-	"github.com/gin-gonic/gin"
-	"net/http"
-	"time"
 	"github.com/MiracleWong/go-blog-service/pkg/logger"
 	"github.com/MiracleWong/go-blog-service/pkg/setting"
+	"github.com/gin-gonic/gin"
 	"gopkg.in/natefinch/lumberjack.v2"
 	"log"
+	"net/http"
+	"time"
 )
 var (
 	ctx context.Context
@@ -81,8 +81,9 @@ func setupDBEngine() error {
 }
 
 func setupLogger() error {
+	fileName := global.AppSetting.LogSavePath + "/" + global.AppSetting.LogFileName + global.AppSetting.LogFileExt
 	global.Logger = logger.NewLogger(&lumberjack.Logger{
-		Filename:  "storage/logs/app.log",
+		Filename:  fileName,
 		MaxSize:   500,
 		MaxAge:    10,
 		LocalTime: true,

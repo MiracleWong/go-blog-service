@@ -3,12 +3,12 @@ package logger
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"io"
 	"log"
 	"runtime"
 	"time"
-	"fmt"
 )
 
 type Level int8

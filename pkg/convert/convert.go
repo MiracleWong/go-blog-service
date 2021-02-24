@@ -2,28 +2,28 @@ package convert
 
 import "strconv"
 
-type strTo string
+type StrTo string
 
-func (s strTo) String() string {
+func (s StrTo) String() string {
 	return string(s)
 }
 
-func (s strTo) Int() (int, error) {
+func (s StrTo) Int() (int, error) {
 	v, err := strconv.Atoi(s.String())
 	return v, err
 }
 
-func (s strTo) MustInt() int {
+func (s StrTo) MustInt() int {
 	v, _ := s.Int()
 	return v
 }
 
-func (s strTo) UInt() (uint32, error) {
+func (s StrTo) UInt() (uint32, error) {
 	v, err := strconv.Atoi(s.String())
 	return uint32(v), err
 }
 
-func (s strTo) MustUInt32() uint32 {
+func (s StrTo) MustUInt32() uint32 {
 	v, _ := s.UInt()
 	return v
 }

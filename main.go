@@ -4,13 +4,11 @@ import (
 	"context"
 	"fmt"
 	"github.com/MiracleWong/go-blog-service/global"
+	"github.com/MiracleWong/go-blog-service/internal/model"
 	"github.com/MiracleWong/go-blog-service/internal/routers"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"time"
-
-	//"github.com/MiracleWong/go-blog-service/docs"
-	"github.com/MiracleWong/go-blog-service/internal/model"
 	"github.com/MiracleWong/go-blog-service/pkg/logger"
 	"github.com/MiracleWong/go-blog-service/pkg/setting"
 	"gopkg.in/natefinch/lumberjack.v2"
@@ -75,8 +73,7 @@ func setupSetting() error {
 
 func setupDBEngine() error {
 	var err error
-	global.DBEngine, err = model.NewDBEngine()
-	//global.DBEngine, err = model.NewDBEngine(global.DataSetting)
+	global.DBEngine, err = model.NewDBEngine(global.DatabaseSetting)
 	if err != nil {
 		return err
 	}

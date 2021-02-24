@@ -6,10 +6,8 @@ import (
 )
 
 var (
-	ServerSetting *setting.ServerSettingS
-	DataSetting *setting.DatabaseSettingS
-	AppSetting *setting.AppSettingS
-	// Logger 全局变量
-	Logger *logger.Logger
+	ServerSetting   *setting.ServerSettingS
+	AppSetting      *setting.AppSettingS
+	DatabaseSetting *setting.DatabaseSettingS
+	Logger          *logger.Logger
 )
-

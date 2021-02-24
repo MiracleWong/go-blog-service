@@ -1,10 +1,11 @@
 package routers
 
 import (
+	_ "github.com/MiracleWong/go-blog-service/docs"
 	v1 "github.com/MiracleWong/go-blog-service/internal/api/v1"
 	"github.com/gin-gonic/gin"
-	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/swaggo/gin-swagger/swaggerFiles"
 )
 
 func NewRouter() *gin.Engine {
@@ -29,7 +30,8 @@ func NewRouter() *gin.Engine {
 		apiv1.GET("/articles/:id", article.Get)
 		apiv1.GET("/articles", article.List)
 	}
-
+	//url := ginSwagger.URL("http://127.0.0.1:8000/swagger/doc.json")
+	//url := ginSwagger.URL("http://localhost:8000/swagger/doc.json")
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	return r
 }

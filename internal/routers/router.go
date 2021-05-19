@@ -3,6 +3,7 @@ package routers
 import (
 	_ "github.com/MiracleWong/go-blog-service/docs"
 	v1 "github.com/MiracleWong/go-blog-service/internal/api/v1"
+	"github.com/MiracleWong/go-blog-service/internal/middleware"
 	"github.com/gin-gonic/gin"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
@@ -12,6 +13,8 @@ func NewRouter() *gin.Engine {
 	r := gin.New()
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
+	// 注册中间件Translations
+	r.Use(middleware.Translations())
 
 	article := v1.NewArticle()
 	tag := v1.NewTag()
@@ -32,6 +35,7 @@ func NewRouter() *gin.Engine {
 	}
 	//url := ginSwagger.URL("http://127.0.0.1:8000/swagger/doc.json")
 	//url := ginSwagger.URL("http://localhost:8000/swagger/doc.json")
+	// 注册针对 Swagger 的路由
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	return r
 }

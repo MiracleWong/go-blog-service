@@ -5,7 +5,6 @@ import (
 	"github.com/MiracleWong/go-blog-service/pkg/app"
 	"github.com/MiracleWong/go-blog-service/pkg/errcode"
 	"github.com/gin-gonic/gin"
-	"log"
 )
 
 type Tag struct {}
@@ -36,14 +35,14 @@ func (t Tag) List(c *gin.Context) {
 
 	response := app.NewResponse(c)
 	valid, errs := app.BindAndValid(c, &param)
-	if !valid {
+	if valid == true {
 		global.Logger.Errorf(c, "app.BindAndValid errs: %v", errs)
 		response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
 		return
 	}
 
 	response.ToResponse(gin.H{})
-	log.Println("Hello List")
+	return
 }
 
 // @Summary 新增标签

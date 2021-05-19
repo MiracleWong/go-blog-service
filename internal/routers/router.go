@@ -23,7 +23,7 @@ func NewRouter() *gin.Engine {
 		apiv1.POST("/tags")
 		apiv1.DELETE("/tags/:id")
 		apiv1.PUT("/tags/:id")
-		apiv1.PATCH("/tags/:id/state")
+		apiv1.PATCH("/tags/:id/state", tag.List)
 		apiv1.GET("/tags", tag.List)
 
 		apiv1.POST("/articles")

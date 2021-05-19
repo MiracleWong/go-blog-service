@@ -1,5 +1,7 @@
 package model
 
+import "github.com/MiracleWong/go-blog-service/pkg/app"
+
 type Tag struct {
 	*Model
 	// Tag名称
@@ -10,4 +12,9 @@ type Tag struct {
 
 func (model Tag) TableName() string {
 	return "blog_tag"
+}
+
+type TagSwagger struct {
+	List []*Tag
+	Pager *app.Pager
 }

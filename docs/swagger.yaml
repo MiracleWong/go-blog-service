@@ -1,4 +1,16 @@
 definitions:
+  app.Pager:
+    properties:
+      page:
+        description: 页码
+        type: integer
+      page_size:
+        description: 每页数量
+        type: integer
+      total_rows:
+        description: 总行数
+        type: integer
+    type: object
   errcode.Error:
     properties:
       code:
@@ -9,6 +21,55 @@ definitions:
         type: array
       msg:
         type: string
+    type: object
+  model.Article:
+    properties:
+      content:
+        description: 文章内容
+        type: string
+      cover_image_url:
+        description: 封面图片地址
+        type: string
+      created_by:
+        description: 创建人
+        type: string
+      created_on:
+        description: 创建时间
+        type: integer
+      deleted_on:
+        description: 删除时间
+        type: integer
+      desc:
+        description: 文章简述
+        type: string
+      id:
+        description: id
+        type: integer
+      is_del:
+        description: 是否删除，0为未删除，1为删除
+        type: integer
+      modified_by:
+        description: 修改人
+        type: string
+      modified_on:
+        description: 修改时间
+        type: integer
+      state:
+        description: 状态0为禁用，状态1为启用
+        type: integer
+      title:
+        description: 文章标题
+        type: string
+    type: object
+  model.ArticleSwagger:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/model.Article'
+        type: array
+      pager:
+        $ref: '#/definitions/app.Pager'
+        type: object
     type: object
   model.Tag:
     properties:
@@ -40,14 +101,217 @@ definitions:
         description: 状态0为禁用，状态1为启用
         type: integer
     type: object
+  model.TagSwagger:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/model.Tag'
+        type: array
+      pager:
+        $ref: '#/definitions/app.Pager'
+        type: object
+    type: object
 info:
   contact: {}
   description: Go 语言编程之旅：一起用 Go 做项目
   license: {}
-  termsOfService: https://github.com:MiracleWong/go-blog-service
+  termsOfService: https://github.com/miraclewong/go-blog-service
   title: 博客系统
   version: "1.0"
 paths:
+  /api/v1/articles:
+    get:
+      parameters:
+      - description: 文章名称
+        in: query
+        name: name
+        type: string
+      - description: 标签ID
+        in: query
+        name: tag_id
+        type: integer
+      - description: 状态
+        in: query
+        name: state
+        type: integer
+      - description: 页码
+        in: query
+        name: page
+        type: integer
+      - description: 每页数量
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/model.ArticleSwagger'
+        "400":
+          description: 请求错误
+          schema:
+            $ref: '#/definitions/errcode.Error'
+        "500":
+          description: 内部错误
+          schema:
+            $ref: '#/definitions/errcode.Error'
+      summary: 获取多个文章
+    post:
+      parameters:
+      - description: 标签ID
+        in: body
+        name: tag_id
+        required: true
+        schema:
+          type: string
+      - description: 文章标题
+        in: body
+        name: title
+        required: true
+        schema:
+          type: string
+      - description: 文章简述
+        in: body
+        name: desc
+        schema:
+          type: string
+      - description: 封面图片地址
+        in: body
+        name: cover_image_url
+        required: true
+        schema:
+          type: string
+      - description: 文章内容
+        in: body
+        name: content
+        required: true
+        schema:
+          type: string
+      - description: 创建者
+        in: body
+        name: created_by
+        required: true
+        schema:
+          type: integer
+      - description: 状态
+        in: body
+        name: state
+        schema:
+          type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/model.Article'
+        "400":
+          description: 请求错误
+          schema:
+            $ref: '#/definitions/errcode.Error'
+        "500":
+          description: 内部错误
+          schema:
+            $ref: '#/definitions/errcode.Error'
+      summary: 创建文章
+  /api/v1/articles/{id}:
+    delete:
+      parameters:
+      - description: 文章ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            type: string
+        "400":
+          description: 请求错误
+          schema:
+            $ref: '#/definitions/errcode.Error'
+        "500":
+          description: 内部错误
+          schema:
+            $ref: '#/definitions/errcode.Error'
+      summary: 删除文章
+    get:
+      parameters:
+      - description: 文章ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/model.Article'
+        "400":
+          description: 请求错误
+          schema:
+            $ref: '#/definitions/errcode.Error'
+        "500":
+          description: 内部错误
+          schema:
+            $ref: '#/definitions/errcode.Error'
+      summary: 获取单个文章
+    put:
+      parameters:
+      - description: 标签ID
+        in: body
+        name: tag_id
+        schema:
+          type: string
+      - description: 文章标题
+        in: body
+        name: title
+        schema:
+          type: string
+      - description: 文章简述
+        in: body
+        name: desc
+        schema:
+          type: string
+      - description: 封面图片地址
+        in: body
+        name: cover_image_url
+        schema:
+          type: string
+      - description: 文章内容
+        in: body
+        name: content
+        schema:
+          type: string
+      - description: 修改者
+        in: body
+        name: modified_by
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/model.Article'
+        "400":
+          description: 请求错误
+          schema:
+            $ref: '#/definitions/errcode.Error'
+        "500":
+          description: 内部错误
+          schema:
+            $ref: '#/definitions/errcode.Error'
+      summary: 更新文章
   /api/v1/tags:
     get:
       parameters:
@@ -78,7 +342,7 @@ paths:
         "200":
           description: 成功
           schema:
-            $ref: '#/definitions/model.Tag'
+            $ref: '#/definitions/model.TagSwagger'
         "400":
           description: 请求错误
           schema:
@@ -144,7 +408,7 @@ paths:
         "200":
           description: 成功
           schema:
-            $ref: '#/definitions/model.Tag'
+            type: string
         "400":
           description: 请求错误
           schema:

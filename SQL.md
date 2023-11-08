@@ -1,3 +1,5 @@
+
+
 CREATE TABLE blog_tag
 (
 id int(10) unsigned NOT NULL AUTO_INCREMENT,

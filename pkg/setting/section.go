@@ -27,6 +27,16 @@ type DatabaseSettingS struct {
 	MaxOpenConns int
 }
 
+// 应用配置
+
+type AppSettingS struct {
+	DefaultPageSize int
+	MaxPageSize     int
+	LogSavePath     string
+	LogFileName     string
+	LogFileExt      string
+}
+
 // 读取配置的方法
 
 func (s *Setting) ReadSection(k string, v interface{}) error {

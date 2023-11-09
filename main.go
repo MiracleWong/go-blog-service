@@ -56,10 +56,15 @@ func setupSetting() error {
 	if err != nil {
 		return err
 	}
+	err = setting.ReadSection("App", &global.AppSetting)
+	if err != nil {
+		return err
+	}
 
 	fmt.Println("settings : ")
 	fmt.Println(global.ServerSetting)
 	fmt.Println(global.DataSetting)
+	fmt.Println(global.AppSetting)
 
 	global.ServerSetting.ReadTimeout *= time.Second
 	global.ServerSetting.WriteTimeout *= time.Second

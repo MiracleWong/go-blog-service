@@ -6,4 +6,5 @@ import "github.com/MiracleWong/go-blog-service/pkg/setting"
 var (
 	ServerSetting *setting.ServerSettingS
 	DataSetting   *setting.DatabaseSettingS
+	AppSetting    *setting.AppSettingS
 )

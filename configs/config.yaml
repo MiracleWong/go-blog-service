@@ -1,7 +1,6 @@
-port: 8080
 Server:
   RunMode: debug
-  HttpPort: 8000
+  HttpPort: 8080
   ReadTimeout: 60
   WriteTimeout: 60
 Database:
@@ -21,5 +20,6 @@ App:
   LogSavePath: storage/logs
   LogFileName: app
   LogFileExt: .log
+port: 8080
 SSS: 1000
 

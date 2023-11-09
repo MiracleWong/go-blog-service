@@ -2,9 +2,25 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"net/http"
+	"time"
 
-	"github.com/spf13/viper"
+	"github.com/MiracleWong/go-blog-service/internal/routers"
+	"github.com/gin-gonic/gin"
+
+	"github.com/MiracleWong/go-blog-service/global"
+	"github.com/MiracleWong/go-blog-service/pkg/setting"
 )
+
+// 初始化配置读取，自动执行
+
+func init() {
+	err := setupSetting()
+	if err != nil {
+		log.Fatalf("init setupSetting err: %v ", err)
+	}
+}
 
 func main() {
 	//r := gin.Default()
@@ -14,25 +30,39 @@ func main() {
 	//	})
 	//})
 	//r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
-	//router := routers.NewRouter()
-	//s := &http.Server{
-	//	Addr:           ":8080",
-	//	Handler:        router,
-	//	ReadTimeout:    10 * time.Second,
-	//	WriteTimeout:   10 * time.Second,
-	//	MaxHeaderBytes: 1 << 20,
-	//}
-	//s.ListenAndServe()
-
-	// 使用Viper 读取配置
-	viper.AddConfigPath("configs/")
-	viper.SetConfigName("config")
-	viper.SetConfigType("yaml")
-
-	err := viper.ReadInConfig()
-	if err != nil {
-		panic(fmt.Errorf("Fatal error config file: %s \n", err))
+	gin.SetMode(global.ServerSetting.RunMode)
+	router := routers.NewRouter()
+	s := &http.Server{
+		Addr:           ":" + global.ServerSetting.HttpPort,
+		Handler:        router,
+		ReadTimeout:    global.ServerSetting.ReadTimeout,
+		WriteTimeout:   global.ServerSetting.WriteTimeout,
+		MaxHeaderBytes: 1 << 20,
 	}
-	fmt.Printf("%d\n", viper.Get("port"))
-	fmt.Printf("%d\n", viper.Get("SSS"))
+	s.ListenAndServe()
+
+}
+
+func setupSetting() error {
+	setting, err := setting.NewSetting()
+	if err != nil {
+		return err
+	}
+	err = setting.ReadSection("Server", &global.ServerSetting)
+	if err != nil {
+		return err
+	}
+	err = setting.ReadSection("Database", &global.DataSetting)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("settings : ")
+	fmt.Println(global.ServerSetting)
+	fmt.Println(global.DataSetting)
+
+	global.ServerSetting.ReadTimeout *= time.Second
+	global.ServerSetting.WriteTimeout *= time.Second
+
+	return nil
 }

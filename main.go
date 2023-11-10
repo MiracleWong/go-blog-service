@@ -23,13 +23,6 @@ func init() {
 }
 
 func main() {
-	//r := gin.Default()
-	//r.GET("/ping", func(c *gin.Context) {
-	//	c.JSON(http.StatusOK, gin.H{
-	//		"message": "Pong",
-	//	})
-	//})
-	//r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 	gin.SetMode(global.ServerSetting.RunMode)
 	router := routers.NewRouter()
 	s := &http.Server{

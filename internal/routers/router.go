@@ -12,6 +12,7 @@ func NewRouter() *gin.Engine {
 
 	article := v1.NewArticle()
 	tag := v1.NewTag()
+	ping := v1.NewPing()
 
 	apiv1 := r.Group("/api/v1")
 	{
@@ -27,6 +28,8 @@ func NewRouter() *gin.Engine {
 		apiv1.PATCH("/articles/:id/state", article.Update)
 		apiv1.GET("/articles/:id", article.Get)
 		apiv1.GET("/articles", article.List)
+
+		apiv1.GET("/ping", ping.Get)
 	}
 
 	return r

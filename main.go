@@ -5,8 +5,7 @@ import (
 	"log"
 	"time"
 
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
+	"github.com/MiracleWong/go-blog-service/internal/model"
 
 	"github.com/MiracleWong/go-blog-service/global"
 	"github.com/MiracleWong/go-blog-service/pkg/setting"
@@ -19,16 +18,20 @@ func init() {
 	if err != nil {
 		log.Fatalf("init setupSetting err: %v ", err)
 	}
+	err = setupDBEngine()
+	if err != nil {
+		log.Fatalf("init setupSetting err: %v ", err)
+	}
 }
 
 func main() {
 
-	dsn := "root:jxkj@123@tcp(127.0.0.1:3306)/test_db?charset=utf8mb4&parseTime=True&loc=Local"
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println("连接成功，db名称: ", db)
+	//dsn := "root:jxkj@123@tcp(127.0.0.1:3306)/test_db?charset=utf8mb4&parseTime=True&loc=Local"
+	//db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	//if err != nil {
+	//	fmt.Println(err)
+	//}
+	//fmt.Println("连接成功，db名称: ", db)
 
 	//gin.SetMode(global.ServerSetting.RunMode)
 	//router := routers.NewRouter()
@@ -41,6 +44,16 @@ func main() {
 	//}
 	//s.ListenAndServe()
 
+}
+
+func setupDBEngine() error {
+	var err error
+	global.DBEngine, err = model.NewDBEngine(global.DataSetting)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func setupSetting() error {

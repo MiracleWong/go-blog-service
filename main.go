@@ -3,11 +3,10 @@ package main
 import (
 	"fmt"
 	"log"
-	"net/http"
 	"time"
 
-	"github.com/MiracleWong/go-blog-service/internal/routers"
-	"github.com/gin-gonic/gin"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 
 	"github.com/MiracleWong/go-blog-service/global"
 	"github.com/MiracleWong/go-blog-service/pkg/setting"
@@ -23,16 +22,24 @@ func init() {
 }
 
 func main() {
-	gin.SetMode(global.ServerSetting.RunMode)
-	router := routers.NewRouter()
-	s := &http.Server{
-		Addr:           ":" + global.ServerSetting.HttpPort,
-		Handler:        router,
-		ReadTimeout:    global.ServerSetting.ReadTimeout,
-		WriteTimeout:   global.ServerSetting.WriteTimeout,
-		MaxHeaderBytes: 1 << 20,
+
+	dsn := "root:jxkj@123@tcp(127.0.0.1:3306)/test_db?charset=utf8mb4&parseTime=True&loc=Local"
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		fmt.Println(err)
 	}
-	s.ListenAndServe()
+	fmt.Println("连接成功，db名称: ", db)
+
+	//gin.SetMode(global.ServerSetting.RunMode)
+	//router := routers.NewRouter()
+	//s := &http.Server{
+	//	Addr:           ":" + global.ServerSetting.HttpPort,
+	//	Handler:        router,
+	//	ReadTimeout:    global.ServerSetting.ReadTimeout,
+	//	WriteTimeout:   global.ServerSetting.WriteTimeout,
+	//	MaxHeaderBytes: 1 << 20,
+	//}
+	//s.ListenAndServe()
 
 }
 

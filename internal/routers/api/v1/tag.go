@@ -25,7 +25,6 @@ func (t Tag) Get(c *gin.Context) {}
 // @Failure 400 {object} errcode.Error "请求错误"
 // @Failure 500 {object} errcode.Error "内部错误"
 // @Router /api/v1/tags [get]
-
 func (t Tag) List(c *gin.Context) {
 	fmt.Println("List Tag")
 }
@@ -39,7 +38,6 @@ func (t Tag) List(c *gin.Context) {
 // @Failure 400 {object} errcode.Error "请求错误"
 // @Failure 500 {object} errcode.Error "内部错误"
 // @Router /api/v1/tags [post]
-
 func (t Tag) Create(c *gin.Context) {}
 
 // @Summary 更新标签
@@ -52,7 +50,6 @@ func (t Tag) Create(c *gin.Context) {}
 // @Failure 400 {object} errcode.Error "请求错误"
 // @Failure 500 {object} errcode.Error "内部错误"
 // @Router /api/v1/tags/{id} [put]
-
 func (t Tag) Update(c *gin.Context) {}
 
 // @Summary 删除标签
@@ -62,5 +59,4 @@ func (t Tag) Update(c *gin.Context) {}
 // @Failure 400 {object} errcode.Error "请求错误"
 // @Failure 500 {object} errcode.Error "内部错误"
 // @Router /api/v1/tags/{id} [delete]
-
 func (t Tag) Delete(c *gin.Context) {}

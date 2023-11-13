@@ -3,12 +3,17 @@ package main
 import (
 	"fmt"
 	"log"
+	"net/http"
 	"time"
 
 	"github.com/MiracleWong/go-blog-service/internal/model"
+	"github.com/MiracleWong/go-blog-service/internal/routers"
+	"github.com/gin-gonic/gin"
 
 	"github.com/MiracleWong/go-blog-service/global"
 	"github.com/MiracleWong/go-blog-service/pkg/setting"
+
+	_ "github.com/MiracleWong/go-blog-service/docs"
 )
 
 // 初始化配置读取，自动执行
@@ -38,16 +43,16 @@ func main() {
 	//}
 	//fmt.Println("连接成功，db名称: ", db)
 
-	//gin.SetMode(global.ServerSetting.RunMode)
-	//router := routers.NewRouter()
-	//s := &http.Server{
-	//	Addr:           ":" + global.ServerSetting.HttpPort,
-	//	Handler:        router,
-	//	ReadTimeout:    global.ServerSetting.ReadTimeout,
-	//	WriteTimeout:   global.ServerSetting.WriteTimeout,
-	//	MaxHeaderBytes: 1 << 20,
-	//}
-	//s.ListenAndServe()
+	gin.SetMode(global.ServerSetting.RunMode)
+	router := routers.NewRouter()
+	s := &http.Server{
+		Addr:           ":" + global.ServerSetting.HttpPort,
+		Handler:        router,
+		ReadTimeout:    global.ServerSetting.ReadTimeout,
+		WriteTimeout:   global.ServerSetting.WriteTimeout,
+		MaxHeaderBytes: 1 << 20,
+	}
+	s.ListenAndServe()
 
 }
 

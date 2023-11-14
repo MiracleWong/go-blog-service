@@ -1,8 +1,23 @@
 package logger
 
+import (
+	"context"
+	"io"
+	"log"
+)
+
 type Level int8
 
 type Fields map[string]interface{}
+
+// 日志Logger 结构体
+
+type Logger struct {
+	newLogger *log.Logger
+	ctx       context.Context
+	fields    Fields
+	callers   []string
+}
 
 const (
 	LevelDebug Level = iota
@@ -31,4 +46,14 @@ func (l Level) String() string {
 		return "panic"
 	}
 	return ""
+}
+
+func NewLogger(w io.Writer, prefix string, flag int) *Logger {
+	l := log.New(w, prefix, flag)
+	return &Logger{newLogger: l}
+}
+
+func (l *Logger) clone() *Logger {
+	nl := *l
+	return &nl
 }
